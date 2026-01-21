@@ -1,0 +1,105 @@
+services:
+  # -------------------------------------------------
+  # DATABASE
+  # -------------------------------------------------
+  postgres:
+    image: postgres:15
+    container_name: indygx-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: indygx
+      POSTGRES_USER: indygx_user
+      POSTGRES_PASSWORD: indygx_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  # -------------------------------------------------
+  # 1. COMPANY CORE SERVICE
+  # -------------------------------------------------
+  company_core:
+    build: ./service/company_core
+    container_name: company_core
+    ports:
+      - "8001:8000"
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+  # -------------------------------------------------
+  # 2. COMPANY PROFILE SERVICE
+  # -------------------------------------------------
+  company_profile:
+    build: ./service/company_profile
+    container_name: company_profile
+    ports:
+      - "8002:8000"
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+  # -------------------------------------------------
+  # 3. FINANCIAL INTELLIGENCE SERVICE
+  # -------------------------------------------------
+  financial_intel:
+    build: ./service/financial_intel
+    container_name: financial_intel
+    ports:
+      - "8003:8000"
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+  # -------------------------------------------------
+  # 4. COMPETITIVE INTELLIGENCE SERVICE
+  # -------------------------------------------------
+  competitive_intel:
+    build: ./service/competitive_intel
+    container_name: competitive_intel
+    ports:
+      - "8004:8000"
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+  # -------------------------------------------------
+  # 5. PARTNERSHIP & ECOSYSTEM SERVICE
+  # -------------------------------------------------
+  partnership_ecosystem:
+    build: ./service/partnership
+    container_name: partnership
+    ports:
+      - "8005:8000"
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+  # -------------------------------------------------
+  # 6. CONTACT & ENGAGEMENT SERVICE
+  # -------------------------------------------------
+  contact:
+    build: ./service/contact
+    container_name: contact
+    ports:
+      - "8006:8000"
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+  # -------------------------------------------------
+  # 7. INDYGX ASSESSMENT SERVICE
+  # -------------------------------------------------
+  indygx_assessment:
+    build: ./service/indygx_assessment
+    container_name: indygx_assessment
+    ports:
+      - "8007:8000"
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+# -------------------------------------------------
+# VOLUMES
+# -------------------------------------------------
+volumes:
+  postgres_data:
